@@ -30,7 +30,7 @@ resource "azurerm_container_registry" "this" {
     content {
       default_action = "Deny"
       dynamic "ip_rule" {
-        for_each = var.allowed_cidres
+        for_each = var.allowed_cidrs
 
         content {
           action   = "Allow"
