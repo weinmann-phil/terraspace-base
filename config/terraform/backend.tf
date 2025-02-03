@@ -2,10 +2,10 @@
 # Backend Config Variables Docs
 # https://terraspace.cloud/docs/config/backend/variables/
 terraform {
-  backend "s3" {
-    bucket         = "<%= expansion('terraform-state-:ACCOUNT-:REGION-:ENV') %>"
-    key            = "<%= expansion(':PROJECT/:REGION/:APP/:ROLE/:ENV/:EXTRA/:BUILD_DIR/terraform.tfstate') %>"
-    region         = "<%= expansion(':REGION') %>"
-    dynamodb_table = "terraform_locks"
+  backend "azurerm" {
+    resource_group_name  = "<%= expansion(':APP-:ENV-:LOCATION') %>"
+    storage_account_name = "<%= expansion('ts:APP_HASH:SUBSCRIPTION_HASH:LOCATION_HASH:ENV') %>"
+    container_name       = "tofu-state"
+    key                  = "<%= expansion(':PROJECT/:TYPE_DIR/:APP/:ROLE/:MOD_NAME/:ENV/:EXTRA/:LOCATION/tofu.tfstate') %>"
   }
 }

@@ -2,6 +2,6 @@
 #
 # If AWS_PROFILE and AWS_REGION is set, then the provider is optional.  Here's an example anyway:
 #
-# provider "aws" {
-#   region = "us-east-1"
-# }
+provider "azurerm" {
+  features {} # required
+}

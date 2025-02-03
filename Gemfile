@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "terraspace", "~> 2.2.0"
-gem "terraspace_plugin_aws"
+gem "terraspace_plugin_azurerm"
 gem "rspec-terraspace"
 
 # Uncomment the ci and vcs provider you wish to use. Should use both ci and vcs gem
