@@ -18,17 +18,24 @@ variable "allowed_subnets" {
   description = "(Optional) The subnets to allow for incoming traffic to the registry."
 }
 
-variable "data_endpoint_enabled" {
-  type        = bool
-  default     = false
-  description = "(Optional) Option to enable dedicated data endpoints for the container registry. Option only supported with `Premium` SKU."
-}
-
 variable "enable_administrative_access" {
   type        = bool
   default     = false
   description = "(Optional)  "
 }
+
+variable "enable_public_network_access" {
+  type        = bool
+  default     = true
+  description = "(Optional) Boolean value to allow public access. Public access can only be disabled with premium sku."
+}
+
+variable "enable_data_endpoint" {
+  type        = bool
+  default     = false
+  description = "(Optional) Option to enable dedicated data endpoints for the container registry. Option only supported with `Premium` SKU."
+}
+
 
 variable "enable_trust_policy" {
   type        = bool
@@ -117,12 +124,6 @@ variable "prefix" {
   default     = ""
   description = "(Optional) The prefix for the resources created in the specified Azure Resource Group. Omitting this variable requires both `var.cluster_log_analytics_workspace_name` and `var.registry_name` have been set."
   nullable    = false
-}
-
-variable "public_network_access_enabled" {
-  type        = bool
-  default     = true
-  description = "(Optional) Option to allow public network access to container registry. Defaults to `true`"
 }
 
 variable "tags" {
