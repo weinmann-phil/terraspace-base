@@ -1,4 +1,13 @@
 # This is where you put your resource declaration
+locals {
+  tags = merge(var.tags, {
+    managed_by     = "OpenTofu"
+    module_name    = "azure/acr"
+    module_version = "v0.0.1"
+    environment    = var.environment
+  })
+}
+
 data "azurerm_resource_group" "this" {
   name = var.resource_group_name
 }
@@ -10,7 +19,7 @@ resource "azurerm_container_registry" "this" {
   sku                 = var.sku
   admin_enabled       = var.enable_administrative_access
 
-  public_network_access_enabled = var.enable_public_network_access
+  public_network_access_enabled = va.enable_public_network_access
   network_rule_bypass_option    = var.network_rule_bypass_option
 
   data_endpoint_enabled = var.enable_data_endpoint
@@ -58,5 +67,5 @@ resource "azurerm_container_registry" "this" {
     }
   }
 
-  tags = var.tags
+  tags = local.tags
 }
