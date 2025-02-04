@@ -103,4 +103,35 @@ resource "azurerm_kubernetes_cluster" "this" {
       outbound_ip_address_ids = [var.outbound_ip_address_ids]
     }
   }
+
+
+  api_server_access_profile {
+    authorized_ip_ranges = var.api_server_authorized_ip_ranges
+  }
+
+  dynamic "" {
+    for_each = var.azure_ad_rbac.enabled ? ["ad_rbac_enabled"] : []
+
+    content {
+      azure_rbac_enabled     = var.azure_ad_rbac.enabled
+      tenant_id              = var.tenant_id
+      admin_group_object_ids = var.azure_ad_rbac.admin_group_object_ids
+    }
+  }
+}
+
+data "azurerm_resources" "cluster_node_resource_group_vnets" {
+  type                = "Microsoft.Network/virtualNetworks"
+  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
+}
+
+data "azurerm_virtual_network" "cluster_vnet" {
+  name                = data.azurerm_resources.cluster_node_resource_group_vnets.resources[0].name
+  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
+}
+
+data "azurerm_subnet" "cluster_vnet_subnet" {
+  name                 = data.azurerm_virtual_network.cluster_vnet.subnets[0]
+  virtual_network_name = data.azurerm_virtual_network.cluster_vnet.name
+  resource_group_name  = azurerm_kubernetes_cluster.cluster.node_resource_group
 }

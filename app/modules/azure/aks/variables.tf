@@ -49,6 +49,12 @@ variable "auto_scaler_profile" {
   description = "(Optional) Configures the auto scaler profiler"
 }
 
+variable "api_server_authorized_ip_ranges" {
+  type        = list(string)
+  default     = []
+  description = "(Optional) Sets the IP block for public access"
+}
+
 variable "azure_managed_identity" {
   type        = object({
     type         = string
@@ -59,6 +65,18 @@ variable "azure_managed_identity" {
     identity_ids = []
   }
   description = "(Optional) Defines managed identity."
+}
+
+variable "azure_ad_rbac" {
+  type        = object({
+    enabled                = bool
+    admin_group_object_ids = list(string)
+  })
+  default = {
+    enabled                = false
+    admin_group_object_ids = []
+  }
+  description = "(Optional) Sets the Azure RBAC integration"
 }
 
 variable "default_node_pool" {
@@ -247,4 +265,13 @@ variable "tags" {
   description = "(Optional) Defines custom tags for the resource"
 }
 
+variable "tenant_id" {
+  type        = string
+  default     = null
+  description = "(Optional) Sets the tenant ID"
 
+  validation {
+    condition     = var.azure_ad_rbac.enabled == false || var.tenant_id != null
+    error_message = "A tenant ID must be provided is Azure Active Directory RBAC integration is enabled!"
+  }
+}
