@@ -122,16 +122,16 @@ resource "azurerm_kubernetes_cluster" "this" {
 
 data "azurerm_resources" "cluster_node_resource_group_vnets" {
   type                = "Microsoft.Network/virtualNetworks"
-  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
+  resource_group_name = azurerm_kubernetes_cluster.this.node_resource_group
 }
 
 data "azurerm_virtual_network" "cluster_vnet" {
   name                = data.azurerm_resources.cluster_node_resource_group_vnets.resources[0].name
-  resource_group_name = azurerm_kubernetes_cluster.cluster.node_resource_group
+  resource_group_name = azurerm_kubernetes_cluster.this.node_resource_group
 }
 
 data "azurerm_subnet" "cluster_vnet_subnet" {
   name                 = data.azurerm_virtual_network.cluster_vnet.subnets[0]
   virtual_network_name = data.azurerm_virtual_network.cluster_vnet.name
-  resource_group_name  = azurerm_kubernetes_cluster.cluster.node_resource_group
+  resource_group_name  = azurerm_kubernetes_cluster.this.node_resource_group
 }
