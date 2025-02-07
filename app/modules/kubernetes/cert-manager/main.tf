@@ -1,12 +1,16 @@
 # This is where you put your resource declaration
 locals {
   labels = {
-    managed_by = "OpenTofu"
+    managed_by     = "OpenTofu"
+    module_name    = "kubernetes/cert-manager"
+    module_version = "v0.0.1"
+    environment    = var.environment
+
   }
 }
 
 data "kubernetes_namespace" "this" {
-  metadata = {
+  metadata {
     name = var.namespace
   }
 }
