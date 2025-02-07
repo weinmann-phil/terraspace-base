@@ -22,8 +22,13 @@ resource "helm_release" "nginx_ingress" {
   namespace  = data.kubernetes_namespace.this.metadata[0].name
 
   values = concat(
-    var.use_spot_affinity
-    ? [templatefile("${path.module}/configs/helm/nginx_ingress/azure_spot_nodes.tpl.yml", {})]
+    var.use_spot_resources
+    ? [templatefile("${path.module}/configs/helm/nginx_ingress/azure_spot_nodes.tpl.yml", {
+        AFFINITY_KEY      = var.additional_config.affinity_key
+        AFFINITY_VALUES   = var.additional_config.affinity_values
+        TOLERATIONS_KEY   = var.additional_config.tolerations_key
+        TOLERATIONS_VALUE = var.additional_config.tolerations_value
+    })]
     : [],
   )
 
@@ -61,7 +66,7 @@ resource "helm_release" "nginx_ingress" {
   }
   set {
     name  = "controller.tcp.configMapNamespace"
-    value = kubernetes_namespace.nginx_ingress.metadata[0].name
+    value = data.kubernetes_namespace.this.metadata[0].name
   }
   set {
     name  = "controller.ingressClassResource.default"
