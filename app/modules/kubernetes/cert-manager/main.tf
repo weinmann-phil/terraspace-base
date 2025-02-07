@@ -35,3 +35,27 @@ resource "helm_release" "cert_manager" {
     value = "true"
   }
 }
+
+# =============================================================================
+# TLS Base Configuration
+# =============================================================================
+resource "kubernetes_manifest" "letsncrypt_cluster_issuer" {
+  for_each = toset(["staging", "production"])
+  manifest = {
+    apiVersion = "cert-manager.io/v1"
+    kind       = "ClusterIssuer"
+    metadata = {
+      name = "letsencrypt-${each.key}"
+    }
+    spec = {
+      acme = {
+        server = "https://acme-v02.api.letsencrypt.org/directory"
+        email  = var.email
+        privateKeySecretRef = {
+          name = "letsencrypt-${each.key}"
+        }
+        solvers = var.solvers
+      }
+    }
+  }
+}
